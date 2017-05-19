@@ -1,15 +1,15 @@
 ![demo](demo/ez.gif)
 
-What shown above is a Sudoku AI implemented with a naïve backtracking algorithm.
+What is shown above is a Sudoku AI implemented with the most naïve backtracking algorithm.
 
-For solving an esay sudoku puzzle, it takes around 3 ms on average.
+For solving an esay sudoku puzzle, it takes around 3 milliseconds on average.
 
-For solving an "evil" one, it takes about 13 ms.
+For solving an "evil" one, it takes about 13 milliseconds.
 
-Graphics demo are presented to show "How AI thinks and tries" XD
+Graphics demo are presented to show "How AI thinks and tries along the way" XD
 
 
 ![demo](demo/evil.gif)
 
 
-Since the solver is a university assignment, source code will not be published for now.
+Since the sudoku solver is a university assignment, source code will not be published for now.
