@@ -8,7 +8,6 @@
 #include <SDL2/SDL.h>
 
 
-
 void InitSDL();
 
 void QuitSDL();

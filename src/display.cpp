@@ -7,7 +7,6 @@
 #include <SDL2_ttf/SDL_ttf.h>
 #include <SDL2_image/SDL_image.h>
 
-using namespace std;
 
 #define COLOURS \
 COLOUR(White,   0, 255, 255, 255, 255) \
@@ -26,13 +25,6 @@ const SDL_Color kColors[] =
 };
 #undef COLOUR
 
-#define COLOUR(name, num, r, g, b, a) #name,
-const std::string kColorNames[] =
-{
-  COLOURS
-};
-#undef COLOUR
-
 
 #define COLOUR(name, num, r, g, b, a) name,
 enum kColorIndex
@@ -41,8 +33,7 @@ enum kColorIndex
 };
 #undef COLOUR
 
-int digit_width = 0;
-int digit_height = 0;
+using namespace std;
 
 const int FONT_SIZE = 30;
 
@@ -81,20 +72,16 @@ inline void SetColor(int index)
   SDL_SetRenderDrawColor(renderer_, kColors[index].r, kColors[index].g, kColors[index].g, kColors[index].a);
 }
 
-void RenderMessage(int nodeExpanded)
-{
-  // TO DO
-}
 
 
 inline void DrawGrid()
 {
   SetColor(kColorIndex::Blue);
-  
-  int x = 0,
-  y = 0,
-  count = 1;
-  
+
+  int x = 0;
+  int y = 0;
+  int count = 1;
+
   while (count ++ <= 8)
   {
     x += VERTICAL_LINE_GAP;
@@ -113,10 +100,10 @@ inline void DrawNumbers(int grid[9][9])
     for (int col = 0; col < 9; col ++)
     {
       if (grid[row][col] < 0 || grid[row][col] > 9) continue;
-      
+
       digit_rect.x = col * CELL_SIZE + MARGIN_SIZE;
       digit_rect.y = row * CELL_SIZE + MARGIN_SIZE;
-    
+
       SDL_RenderCopy(renderer_, number_textures[grid[row][col]], NULL, &digit_rect);
     }
   }
@@ -124,8 +111,8 @@ inline void DrawNumbers(int grid[9][9])
 
 inline void DrawBackground()
 {
-  SetColor(0);
-  
+  SetColor(kColorIndex::White);
+
   SDL_RenderClear(renderer_);
 }
 
@@ -133,13 +120,11 @@ inline void DrawBackground()
 void Draw(int grid[9][9], int nodeExpanded)
 {
   DrawBackground();
-  
+
   DrawGrid();
-  
+
   DrawNumbers(grid);
-  
-  RenderMessage(nodeExpanded);
-  
+
   SDL_RenderPresent(renderer_);
 }
 
@@ -150,52 +135,50 @@ void InitSDL()
   {
     throw "SDL Initialization Failed: " + string(SDL_GetError());
   }
-  
+
   window_ = SDL_CreateWindow("Sudoku", WINDOW_X, WINDOW_Y,
                              WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
-  
+
   if (window_ == NULL)
   {
     throw "SDL Creating Window failed: " + string(SDL_GetError());
   }
-  
+
   renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
-  
+
   if (renderer_ == NULL)
   {
     throw "SDL Creating Renderer failed: " + string(SDL_GetError());
   }
-  
+
   // White by default
   SDL_SetRenderDrawColor(renderer_, 0xFF, 0xFF, 0xFF, 0xFF);
-  
+
   SDL_RenderClear(renderer_);
-  
+
   if (TTF_Init() == -1)
   {
     throw "TTF Initialization failed " + string(TTF_GetError());
   }
-  
+
   font_ = TTF_OpenFont(FONT_FILE.c_str(), FONT_SIZE);
-  
+
   if(font_ == NULL)
   {
     throw "Open font_ failed: " + string(TTF_GetError());
   }
   message_texture_ = NULL;
-  
+
   // Prepare digit textures
   for (int digit = 0; digit < 10; digit ++)
   {
     SDL_Surface* surface = TTF_RenderText_Solid(font_, to_string(digit).c_str(), kNumberColour);
-    
+
     number_textures[digit] = SDL_CreateTextureFromSurface(renderer_, surface);
-    
+
     digit_rect.w = surface->w;
     digit_rect.h = surface->h;
-    
-    // cout << "Digit width: " << digit_width << " height: " << digit_height << endl;
-    
+
     SDL_FreeSurface(surface);
   }
 }
@@ -206,15 +189,11 @@ void QuitSDL()
 {
   TTF_CloseFont(font_);
   SDL_DestroyTexture(message_texture_);
-  
+
   SDL_Quit();
   TTF_Quit();
-  
+
   SDL_DestroyWindow(window_);
   SDL_DestroyRenderer(renderer_);
 }
-
-
-
-
 
